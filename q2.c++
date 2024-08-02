@@ -1,88 +1,86 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
-struct Apple {
-    int weight;
-    bool allocated;
+struct Fru {
+    int m;
+    bool a;
 };
 
-int calculateTargetWeight(int totalWeight, int share) {
-    return (totalWeight * share) / 100;
-}
+void dis(vector<Fru>& fs, int a, int b, int c) {
+    int t = 0;
+    int at = 0;
+    int bt = 0;
+    int ct = 0;
 
-void distributeApples(vector<Apple>& apples, int ramShare, int shamShare, int rahimShare) {
-    vector<Apple> ramApples, shamApples, rahimApples;
-    int totalWeight = 0;
-
-    for (const auto& apple : apples) {
-        totalWeight += apple.weight;
+    for (const auto& f : fs) {
+        t += f.m;
     }
 
-    int ramTarget = calculateTargetWeight(totalWeight, ramShare);
-    int shamTarget = calculateTargetWeight(totalWeight, shamShare);
-    int rahimTarget = calculateTargetWeight(totalWeight, rahimShare);
+    int ag = (t * a) / 100;
+    int bg = (t * b) / 100;
+    int cg = (t * c) / 100;
 
-    sort(apples.begin(), apples.end(), [](const Apple& a, const Apple& b) {
-        return a.weight > b.weight;
-    });
-
-    for (auto& apple : apples) {
-        if (!apple.allocated) {
-            if (ramTarget >= apple.weight) {
-                ramApples.push_back(apple);
-                ramTarget -= apple.weight;
-                apple.allocated = true;
-            } else if (shamTarget >= apple.weight) {
-                shamApples.push_back(apple);
-                shamTarget -= apple.weight;
-                apple.allocated = true;
-            } else if (rahimTarget >= apple.weight) {
-                rahimApples.push_back(apple);
-                rahimTarget -= apple.weight;
-                apple.allocated = true;
+    for (auto& f : fs) {
+        if (!f.a) {
+            if (at + f.m <= ag) {
+                at += f.m;
+                f.a = true;
+            } else if (bt + f.m <= bg) {
+                bt += f.m;
+                f.a = true;
+            } else if (ct + f.m <= cg) {
+                ct += f.m;
+                f.a = true;
             }
         }
     }
 
-    cout << "Distribution Result:" << endl;
-    cout << "Ram : ";
-    for (const auto& apple : ramApples) {
-        cout << apple.weight << " ";
+    cout << "A: ";
+    for (const auto& f : fs) {
+        if (f.a && at - f.m >= 0) {
+            cout << f.m << " ";
+            at -= f.m;
+        }
     }
     cout << endl;
 
-    cout << "Sham : ";
-    for (const auto& apple : shamApples) {
-        cout << apple.weight << " ";
+    cout << "B: ";
+    for (const auto& f : fs) {
+        if (f.a && bt - f.m >= 0) {
+            cout << f.m << " ";
+            bt -= f.m;
+        }
     }
     cout << endl;
 
-    cout << "Rahim : ";
-    for (const auto& apple : rahimApples) {
-        cout << apple.weight << " ";
+    cout << "C: ";
+    for (const auto& f : fs) {
+        if (f.a && ct - f.m >= 0) {
+            cout << f.m << " ";
+            ct -= f.m;
+        }
     }
     cout << endl;
 }
 
 int main() {
-    vector<Apple> apples;
-    int weight;
+    vector<Fru> fs;
+    int m;
 
-    cout << "Enter apple weight in gram (-1 to stop): ";
+    cout << "Enter mass in grams (-1 to stop): ";
     while (true) {
-        cin >> weight;
-        if (weight == -1) break;
-        apples.push_back({weight, false});
+        cin >> m;
+        if (m == -1) break;
+        fs.push_back({m, false});
     }
 
-    int ramShare = 50;
-    int shamShare = 30;
-    int rahimShare = 20;
+    int a = 50;
+    int b = 30;
+    int c = 20;
 
-    distributeApples(apples, ramShare, shamShare, rahimShare);
+    dis(fs, a, b, c);
 
     return 0;
 }
